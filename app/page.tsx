@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold mb-4">환영합니다!</h2>
           <p className="text-gray-600 mb-6">
-            데이터베이스 연결 후 딜 정보가 표시됩니다.
+            성공적으로 배포되었습니다! 🚀
           </p>
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="bg-blue-50 p-4 rounded">
