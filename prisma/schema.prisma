@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String     @id @default(cuid())
+  email               String     @unique
+  createdAt           DateTime   @default(now())
+  prefs               String     @default("[]")
+  priceMin            Int?
+  priceMax            Int?
+  followedInfluencers String     @default("[]")
+  views               View[]
+  clicks              Click[]
+  reminders           Reminder[]
+}
+
+model Influencer {
+  id       String @id @default(cuid())
+  handle   String @unique
+  name     String
+  platform String
+  deals    Deal[]
+}
+
+model Deal {
+  id            String     @id @default(cuid())
+  title         String
+  description   String
+  category      String
+  price         Int
+  baselinePrice Int
+  startAt       DateTime
+  endAt         DateTime
+  linkUrl       String
+  createdAt     DateTime   @default(now())
+  influencerId  String
+  influencer    Influencer @relation(fields: [influencerId], references: [id], onDelete: Cascade)
+  views         View[]
+  clicks        Click[]
+  reminders     Reminder[]
+}
+
+model View {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dealId    String
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+}
+
+model Click {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dealId    String
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+}
+
+enum ReminderType {
+  start
+  end
+  price
+}
+
+model Reminder {
+  id             String       @id @default(cuid())
+  type           ReminderType
+  thresholdPrice Int?
+  fireAt         DateTime
+  sentAt         DateTime?
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dealId         String
+  deal           Deal         @relation(fields: [dealId], references: [id], onDelete: Cascade)
+}
